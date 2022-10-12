@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const shortid = require('shortid');
 const ShortUrl = require('./../models/urlModel');
+const validateUrl = require('./../utils/utils.js');
 
 function init(app, port) {
     app.use(cors());
@@ -23,12 +24,17 @@ function init(app, port) {
     })
     
     app.post('/url-shortener',async (req, res) => { 
+        if(!validateUrl.validateUrl(req.body.url)){
+            res.status(400).send(`Ivalid Url Link!`);
+            res.end();
+            return;
+        }         
         try{
             const urlObj = await ShortUrl.create({url: req.body.url});
             res.write(JSON.stringify(urlObj));
             res.status(201);
             res.end();
-              return ;
+            return ;
         }
         catch(error){
             if(error.code === 11000){
@@ -39,7 +45,7 @@ function init(app, port) {
             res.status(500);
             res.end();
             return;
-        }              
+        }     
     })
 
     app.listen(port, () => {           
