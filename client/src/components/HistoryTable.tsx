@@ -17,15 +17,23 @@ const Title = styled.div`
   font-size: 25px;
   padding: 5px;
 `;
-
+const Button = styled.button`
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  margin: 20px auto;
+`;
 interface TableProps {
   urlsList: UrlObj[];
+  deleteHistory: () => void;
 }
 
-const HistoryTable = ({ urlsList }: TableProps) => {
+const HistoryTable = ({ urlsList, deleteHistory }: TableProps) => {
   return (
     <>
       <Title>HISTORY</Title>
+      <Button onClick={deleteHistory}>REMOVE ALL</Button>
       <TableContainer
         style={{ margin: "3% auto", overflow: "scroll", maxHeight: "450px" }}
         component={Paper}

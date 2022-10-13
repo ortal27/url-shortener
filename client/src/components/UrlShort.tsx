@@ -28,6 +28,8 @@ const UrlShort = () => {
 
   useEffect(() => {
     axios.get("http://localhost:8080/").then((res) => {
+      console.log("here1", res.data === null);
+
       setUrlsList(res.data);
     });
   }, [lastUrl]);
@@ -55,6 +57,13 @@ const UrlShort = () => {
       });
   };
 
+  const deleteHistoryHsndler = () => {
+    axios.get("http://localhost:8080/delete-history").then(() => {
+      setUrlsList([]);
+      setLastUrl(null);
+      setUrlExists(false);
+    });
+  };
   return (
     <Container>
       <UrlBox
@@ -88,7 +97,12 @@ const UrlShort = () => {
             : null}
         </Title>
       )}
-      {urlsList && <HistoryTable urlsList={urlsList} />}
+      {urlsList && urlsList?.length > 0 && (
+        <HistoryTable
+          urlsList={urlsList}
+          deleteHistory={deleteHistoryHsndler}
+        />
+      )}
     </Container>
   );
 };

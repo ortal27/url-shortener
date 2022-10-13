@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const db = require('./../database')
+
 const shortid = require('shortid');
 const ShortUrl = require('./../models/urlModel');
 const validateUrl = require('./../utils/utils.js');
@@ -14,6 +16,11 @@ function init(app, port) {
         res.end();
     })
 
+    app.get('/delete-history', async(req, res) => {
+         await ShortUrl.deleteMany({});
+        res.end();
+    }) 
+
     app.get('/:shortUrl', async(req, res) => {
         const short = await ShortUrl.findOne({short: req.params.shortUrl});
         if(!short){
@@ -23,6 +30,7 @@ function init(app, port) {
         res.redirect(fullUrl);
     })
     
+
     app.post('/url-shortener',async (req, res) => { 
         if(!validateUrl.validateUrl(req.body.url)){
             res.status(400).send(`Ivalid Url Link!`);
